@@ -35,7 +35,7 @@ Player.prototype.step = function (dt) {
     var other;
 
     // Fall through bottom of the frame then lose
-    if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
+    if (this.y > Game.cameraY + Game.app.center.y - this.radius) {
       console.log('You lost!');
 
       app.setState(Menu);
@@ -113,7 +113,7 @@ Player.prototype.render = function () {
 };
 
 Player.prototype.pointerdown = function (event) {
-  if (this.stuck) {
+  if (this.stuck || this.colorIndex === 2) {
     this.pointerStartX = event.x;
     this.pointerStartY = event.y;
 
@@ -125,7 +125,17 @@ Player.prototype.pointerdown = function (event) {
 };
 
 Player.prototype.pointerup = function (event) {
-  if (this.stuck) {
+  if (this.stuck || this.colorIndex === 2) {
+    if (!this.stuck && this.colorIndex === 2) {
+      this.vx = 0;
+      this.vy = 0;
+
+      this.colorIndex = -1;
+
+      Game.app.tween(this)
+        .to({color: this.defaultColor}, 0.25, "outQuad");
+    }
+    
     var diffX = this.pointerStartX - event.x;
     var diffY = this.pointerStartY - event.y;
     var dist = Math.sqrt(diffX*diffX + diffY*diffY);
@@ -140,11 +150,13 @@ Player.prototype.pointerup = function (event) {
     }
 
     this.drawPointer = false;
+
+    this.stuck = false;
   }
 };
 
 Player.prototype.pointermove = function(event) {
-  if (this.stuck) {
+  if (this.stuck || this.colorIndex === 2) {
     this.lineStart = { x: this.x, y: this.y};
     this.lineEnd = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
   }
@@ -153,6 +165,4 @@ Player.prototype.pointermove = function(event) {
 Player.prototype.addForce = function (dx, dy) {
   this.vx += dx;
   this.vy += dy;
-
-  this.stuck = false;
 };
