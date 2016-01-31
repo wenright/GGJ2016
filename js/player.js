@@ -71,9 +71,9 @@ Player.prototype.step = function (dt) {
 
     // If there is a block hit, stick to it and gain its powers
     if (other) {
-      if (other.colorIndex === this.colorIndex && this.colorIndex === 1) {
-        this.vy = this.vy * 1.25;
-        this.vx = -this.vx * 1.25;
+      if (other.colorIndex === this.colorIndex && this.colorIndex === 0) {
+        this.vy *= this.bonusForce;
+        this.vx *= this.bonusForce;
       }
 
       else {
