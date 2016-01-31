@@ -99,11 +99,6 @@ Player.prototype.pointermove = function(event) {
   this.pointerCurr = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
 };
 
-Player.prototype.pointermove = function(event) {
-  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
-  this.pointerCurr = { x: event.x, y: event.y};
-};
-
 Player.prototype.addForce = function (dx, dy) {
   this.vx += dx * this.force;
   this.vy += dy * this.force;
