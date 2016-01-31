@@ -3,16 +3,17 @@ Game = {
   create: function() {
     // Defines size of black bars and blocks on the side
     this.margin = 40;
+    this.cameraY = app.center.y;
 
     this.player = new Player();
 
-    this.blocks = new EntitySystem();
-    this.blocks.add(new Block(0, 0, '#25f000'));
+    this.leftSideBlocks = new EntitySystem();
+    this.leftSideBlocks.add(new Block(0, 0, '#25f000'));
   },
 
   step: function(dt) {
     this.player.step(dt);
-    this.blocks.step(dt);
+    this.leftSideBlocks.step(dt);
   },
 
   render: function() {
@@ -35,14 +36,16 @@ Game = {
     /* save all setting of drawing pointer */
     layer.save();
 
+    this.cameraY = Math.min(this.player.y, this.cameraY);
+
     /* translate drawing pointer to the center of screen */
-    layer.translate(0, app.center.y);
+    layer.translate(0, -this.cameraY + app.height /2);
 
     /* Draw the player */
     this.player.render();
 
-    /* Draw all of the blocks */
-    this.blocks.render();
+    /* Draw all of the leftSideBlocks */
+    this.leftSideBlocks.render();
 
     /* restore drawing pointer to its previous state */
     layer.restore();
@@ -55,18 +58,11 @@ Game = {
   },
 
   pointerdown: function(event) {
-    Game.pointerStartX = event.x;
-    Game.pointerStartY = event.y;
+    Game.player.pointerdown(event);
   },
 
   pointerup: function(event) {
-    var diffX = Game.pointerStartX - event.x;
-    var diffY = Game.pointerStartY - event.y;
-    var dist = Math.sqrt(diffX*diffX + diffY*diffY);
-
-    if (dist > 0) {
-      Game.player.addForce(diffX/dist, diffY/dist);
-    }
+    Game.player.pointerup(event);
   }
 
 };

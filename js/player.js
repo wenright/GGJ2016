@@ -27,11 +27,17 @@ Player.prototype.step = function (dt) {
       this.x = this.radius + Game.margin;
       this.vx = -this.vx;
 
-      var other = Game.blocks.get(function(e) {
-        // TODO
-        return e.y + e.h >= this.x && e.y <= this.x;
+      var thisY = this.y;
+
+      var other = Game.leftSideBlocks.get(function(e) {
+        return e.y + e.h >= thisY && e.y <= thisY;
       });
-      console.log(other);
+
+      if (other) {
+        this.vx = 0;
+        this.vy = 0;
+        this.stuck = true;
+      }
     }
     else if (this.x > Game.app.width - this.radius - Game.margin) {
       this.x = Game.app.width - this.radius - Game.margin;
@@ -44,6 +50,21 @@ Player.prototype.render = function () {
   Game.app.layer
     .fillStyle('#ff7700')
     .fillCircle(this.x, this.y, this.radius);
+};
+
+Player.prototype.pointerdown = function (event) {
+  this.pointerStartX = event.x;
+  this.pointerStartY = event.y;
+};
+
+Player.prototype.pointerup = function (event) {
+  var diffX = this.pointerStartX - event.x;
+  var diffY = this.pointerStartY - event.y;
+  var dist = Math.sqrt(diffX*diffX + diffY*diffY);
+
+  if (dist > 0) {
+    this.addForce(diffX/dist, diffY/dist);
+  }
 };
 
 Player.prototype.addForce = function (dx, dy) {
