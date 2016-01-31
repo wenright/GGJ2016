@@ -23,12 +23,18 @@ Player.prototype.step = function (dt) {
     this.vy += this.gravity * dt;
 
     // Perform collision detection, and bounce if there is a collision
-    if (this.x < this.radius) {
-      this.x = this.radius;
+    if (this.x < this.radius + Game.margin) {
+      this.x = this.radius + Game.margin;
       this.vx = -this.vx;
+
+      var other = Game.blocks.get(function(e) {
+        // TODO
+        return e.y + e.h >= this.x && e.y <= this.x;
+      });
+      console.log(other);
     }
-    else if (this.x > Game.app.width - this.radius) {
-      this.x = Game.app.width - this.radius;
+    else if (this.x > Game.app.width - this.radius - Game.margin) {
+      this.x = Game.app.width - this.radius - Game.margin;
       this.vx = -this.vx;
     }
   }

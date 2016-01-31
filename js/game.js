@@ -1,6 +1,9 @@
 Game = {
 
   create: function() {
+    // Defines size of black bars and blocks on the side
+    this.margin = 40;
+
     this.player = new Player();
 
     this.blocks = new EntitySystem();
@@ -22,6 +25,13 @@ Game = {
     /* clear screen */
     layer.clear("#222");
 
+    /* Draw a black bar down both sides of the screen */
+    layer.fillStyle('#000')
+      .fillRect(0, 0, this.margin, app.height);
+
+    layer.fillStyle('#000')
+      .fillRect(app.width - this.margin, 0, 40, app.height);
+
     /* save all setting of drawing pointer */
     layer.save();
 
@@ -36,6 +46,8 @@ Game = {
 
     /* restore drawing pointer to its previous state */
     layer.restore();
+
+    /* Draw things that aren't affected by camera movement here (GUI) */
   },
 
   pointermove: function(event) {

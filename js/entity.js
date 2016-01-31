@@ -1,7 +1,5 @@
 var EntitySystem = function () {
   this.pool = [];
-
-  console.log('Entity system loaded');
 };
 
 EntitySystem.prototype = {
@@ -26,6 +24,15 @@ EntitySystem.prototype = {
 
   render: function () {
     this.loop('render');
+  },
+
+  // Returns the object that returns true in the given function
+  get: function (func) {
+    for (var entity in this.pool) {
+      if (func(this.pool[entity])) {
+        return this.pool[entity];
+      }
+    }
   }
 
 };
