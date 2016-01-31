@@ -8,7 +8,7 @@ var app = new PLAYGROUND.Application({
 
   ready: function() {
     /* after preloading route events to the game state */
-    this.setState(Game);
+    this.setState(Menu);
   }
 
 });
