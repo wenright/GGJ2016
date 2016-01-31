@@ -1,3 +1,5 @@
+// ☃
+
 Game = {
 
   create: function() {
