@@ -58,6 +58,17 @@ Game = {
       layer.restore();
 
       /* Draw things that aren't affected by camera movement here (GUI) */
+
+    }
+    else {
+      /* clear screen */
+      layer.clear("#222");
+
+      /* Draw game over text */
+      layer
+        .fillStyle("#fff")
+        .textAlign("center")
+        .fillText("Game Over!", app.center.x, app.center.y);
     }
   },
 
