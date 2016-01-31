@@ -7,13 +7,12 @@ Game = {
     this.margin = 40;
     this.lost = false;
     this.cameraY = app.center.y;
+    this.lastBlockAddedY = 0;
 
     this.player = new Player();
 
     this.leftSideBlocks = new EntitySystem();
-    this.leftSideBlocks.add(new Block(0, 0, '#25f000'));
     this.rightSideBlocks = new EntitySystem();
-    this.rightSideBlocks.add(new Block(app.width - this.margin, -400, '#51a8db'));
   },
 
   step: function(dt) {
@@ -22,6 +21,24 @@ Game = {
 
       this.leftSideBlocks.step(dt);
       this.rightSideBlocks.step(dt);
+
+      // HACK: there are probably better ways of building up the level
+      // Add some randomm blocks in once player reaches certain heights
+      if (this.player.y - app.height < this.lastBlockAddedY) {
+        console.log('ADding new block');
+        if (Math.random() > 0.5) {
+          this.rightSideBlocks.add(new Block(app.width - this.margin, this.lastBlockAddedY));
+          this.lastBlockAddedY -= 300 + Math.random() * 200;
+          this.leftSideBlocks.add(new Block(0, this.lastBlockAddedY));
+        }
+        else {
+          this.leftSideBlocks.add(new Block(0, this.lastBlockAddedY));
+          this.lastBlockAddedY -= 300 + Math.random() * 200;
+          this.rightSideBlocks.add(new Block(app.width - this.margin, this.lastBlockAddedY));
+        }
+
+        this.lastBlockAddedY -= 300 + Math.random() * 200;
+      }
     }
   },
 
