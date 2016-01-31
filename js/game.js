@@ -1,6 +1,6 @@
 // HACK: ☃
 function newGame() {
-  return {
+  return Game = {
 
     create: function() {
       // Defines size of black bars and blocks on the side
