@@ -3,6 +3,7 @@ Game = {
   create: function() {
     // Defines size of black bars and blocks on the side
     this.margin = 40;
+    this.lost = false;
 
     this.player = new Player();
 
@@ -22,32 +23,34 @@ Game = {
     /* get reference to drawing surface */
     var layer = this.app.layer;
 
-    /* clear screen */
-    layer.clear("#222");
+    if (!this.lost) {
+      /* clear screen */
+      layer.clear("#222");
 
-    /* Draw a black bar down both sides of the screen */
-    layer.fillStyle('#000')
-      .fillRect(0, 0, this.margin, app.height);
+      /* Draw a black bar down both sides of the screen */
+      layer.fillStyle('#000')
+        .fillRect(0, 0, this.margin, app.height);
 
-    layer.fillStyle('#000')
-      .fillRect(app.width - this.margin, 0, 40, app.height);
+      layer.fillStyle('#000')
+        .fillRect(app.width - this.margin, 0, 40, app.height);
 
-    /* save all setting of drawing pointer */
-    layer.save();
+      /* save all setting of drawing pointer */
+      layer.save();
 
-    /* translate drawing pointer to the center of screen */
-    layer.translate(0, app.center.y);
+      /* translate drawing pointer to the center of screen */
+      layer.translate(0, app.center.y);
 
-    /* Draw the player */
-    this.player.render();
+      /* Draw the player */
+      this.player.render();
 
-    /* Draw all of the blocks */
-    this.blocks.render();
+      /* Draw all of the blocks */
+      this.blocks.render();
 
-    /* restore drawing pointer to its previous state */
-    layer.restore();
+      /* restore drawing pointer to its previous state */
+      layer.restore();
 
-    /* Draw things that aren't affected by camera movement here (GUI) */
+      /* Draw things that aren't affected by camera movement here (GUI) */
+    }
   },
 
   pointermove: function(event) {

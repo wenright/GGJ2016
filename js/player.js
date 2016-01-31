@@ -37,6 +37,10 @@ Player.prototype.step = function (dt) {
       this.x = Game.app.width - this.radius - Game.margin;
       this.vx = -this.vx;
     }
+    // Fall through bottom of the frame then lose
+    else if (this.y > Game.app.center.y) {
+      Game.lost = true;
+    }
   }
 };
 
