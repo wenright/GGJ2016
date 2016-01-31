@@ -1,8 +1,8 @@
 var Player = function () {
   this.radius = 50;
 
-  this.x = Game.app.width / 2;
-  this.y = Game.app.height / 4;
+  this.x = Game.app.center.x;
+  this.y = Game.app.center.y / 2;
 
   this.vx = 0;
   this.vy = 0;
@@ -13,7 +13,7 @@ var Player = function () {
   this.stuck = true;
 };
 
-Player.prototype.update = function (dt) {
+Player.prototype.step = function (dt) {
   if (!this.stuck) {
     // Update position based on velocity and delta time
     this.x += this.vx * dt;
@@ -34,7 +34,7 @@ Player.prototype.update = function (dt) {
   }
 };
 
-Player.prototype.draw = function () {
+Player.prototype.render = function () {
   Game.app.layer
     .fillStyle('#ff7700')
     .fillCircle(this.x, this.y, this.radius);

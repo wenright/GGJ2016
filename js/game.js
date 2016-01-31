@@ -2,10 +2,14 @@ Game = {
 
   create: function() {
     this.player = new Player();
+
+    this.blocks = new EntitySystem();
+    this.blocks.add(new Block(0, 0, '#25f000'));
   },
 
   step: function(dt) {
-    this.player.update(dt);
+    this.player.step(dt);
+    this.blocks.step(dt);
   },
 
   render: function() {
@@ -25,7 +29,10 @@ Game = {
     layer.translate(0, app.center.y);
 
     /* Draw the player */
-    this.player.draw();
+    this.player.render();
+
+    /* Draw all of the blocks */
+    this.blocks.render();
 
     /* restore drawing pointer to its previous state */
     layer.restore();
@@ -45,7 +52,9 @@ Game = {
     var diffY = Game.pointerStartY - event.y;
     var dist = Math.sqrt(diffX*diffX + diffY*diffY);
 
-    Game.player.addForce(diffX/dist, diffY/dist);
+    if (dist > 0) {
+      Game.player.addForce(diffX/dist, diffY/dist);
+    }
   }
 
 };
