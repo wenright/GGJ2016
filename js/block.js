@@ -3,7 +3,7 @@ var Block = function (x, y, color) {
   this.y = y;
 
   this.w = Game.margin;
-  this.h = 120;
+  this.h = 200;
 
   this.color = color;
 };
