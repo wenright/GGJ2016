@@ -34,6 +34,13 @@ Player.prototype.step = function (dt) {
     var thisY = this.y;
     var other;
 
+    // Fall through bottom of the frame then lose
+    if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
+      console.log('You lost!');
+
+      app.setState(Menu);
+    }
+
     // Perform collision detection, and bounce if there is a collision
     if (this.x < this.radius + Game.margin) {
       this.x = this.radius + Game.margin;
@@ -43,8 +50,10 @@ Player.prototype.step = function (dt) {
         return e.y + e.h >= thisY && e.y <= thisY;
       });
 
-      this.color = this.defaultColor;
-      this.colorIndex = -1;
+      if (!other) {
+        this.color = this.defaultColor;
+        this.colorIndex = -1;
+      }
     }
     else if (this.x > Game.app.width - this.radius - Game.margin) {
       this.x = Game.app.width - this.radius - Game.margin;
@@ -54,33 +63,38 @@ Player.prototype.step = function (dt) {
         return e.y + e.h >= thisY && e.y <= thisY;
       });
 
-      this.color = this.defaultColor;
-      this.colorIndex = -1;
+      if (!other) {
+        this.color = this.defaultColor;
+        this.colorIndex = -1;
+      }
     }
 
     // If there is a block hit, stick to it and gain its powers
     if (other) {
-      this.vx = 0;
-      this.vy = 0;
-
-      if (!this.stuck) {
-        // Tween the color only once
-        Game.app.tween(this)
-          .to({color: other.color}, 0.25, "outQuad");
-
-        // Give player a new power
-        this.colorIndex = other.colorIndex;
+      if (other.colorIndex === this.colorIndex && this.colorIndex === 1) {
+        this.vy = this.vy * 1.25;
+        this.vx = -this.vx * 1.25;
       }
 
-      this.stuck = true;
+      else {
+
+        this.vx = 0;
+        this.vy = 0;
+
+        if (!this.stuck) {
+          // Tween the color only once
+          Game.app.tween(this)
+            .to({color: other.color}, 0.25, "outQuad");
+
+          // Give player a new power
+          this.colorIndex = other.colorIndex;
+        }
+
+        this.stuck = true;
+      }
     }
 
-    // Fall through bottom of the frame then lose
-    else if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
-      console.log('You lost!');
 
-      app.setState(Menu);
-    }
   }
 };
 
