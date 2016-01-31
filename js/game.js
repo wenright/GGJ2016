@@ -15,10 +15,12 @@ Game = {
   },
 
   step: function(dt) {
-    this.player.step(dt);
+    if (!this.lost) {
+      this.player.step(dt);
 
-    this.leftSideBlocks.step(dt);
-    this.rightSideBlocks.step(dt);
+      this.leftSideBlocks.step(dt);
+      this.rightSideBlocks.step(dt);
+    }
   },
 
   render: function() {
