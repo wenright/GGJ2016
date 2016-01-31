@@ -9,6 +9,8 @@ var Player = function () {
 
   this.gravity = 450;
   this.force = 1000;
+  this.bonusForce = 2000;
+  this.colorIndex = -1;
 
   this.stuck = true;
 
@@ -16,7 +18,8 @@ var Player = function () {
   this.lineEnd = { x: 0, y: 0 };
   this.drawPointer = false;
 
-  this.color = '#fff';
+  this.defaultColor = '#fff';
+  this.color = this.defaultColor;
 };
 
 Player.prototype.step = function (dt) {
@@ -39,6 +42,9 @@ Player.prototype.step = function (dt) {
       other = Game.leftSideBlocks.get(function(e) {
         return e.y + e.h >= thisY && e.y <= thisY;
       });
+
+      this.color = this.defaultColor;
+      this.colorIndex = -1;
     }
     else if (this.x > Game.app.width - this.radius - Game.margin) {
       this.x = Game.app.width - this.radius - Game.margin;
@@ -47,6 +53,9 @@ Player.prototype.step = function (dt) {
       other = Game.rightSideBlocks.get(function(e) {
         return e.y + e.h >= thisY && e.y <= thisY;
       });
+
+      this.color = this.defaultColor;
+      this.colorIndex = -1;
     }
 
     // If there is a block hit, stick to it and gain its powers
@@ -54,10 +63,13 @@ Player.prototype.step = function (dt) {
       this.vx = 0;
       this.vy = 0;
 
-      // Tween the color only once
       if (!this.stuck) {
+        // Tween the color only once
         Game.app.tween(this)
           .to({color: other.color}, 0.25, "outQuad");
+
+        // Give player a new power
+        this.colorIndex = other.colorIndex;
       }
 
       this.stuck = true;
@@ -73,17 +85,17 @@ Player.prototype.step = function (dt) {
 };
 
 Player.prototype.render = function () {
-  Game.app.layer
-    .fillStyle(this.color)
-    .fillCircle(this.x, this.y, this.radius);
-
   // Draw the line representing where the ball will launch to
   if (this.drawPointer) {
     Game.app.layer
-      .strokeStyle("#0af")
+      .strokeStyle(this.color)
       .lineWidth(4)
       .strokeLine(this.lineStart, this.lineEnd);
   }
+
+  Game.app.layer
+    .fillStyle(this.color)
+    .fillCircle(this.x, this.y, this.radius);
 };
 
 Player.prototype.pointerdown = function (event) {
@@ -92,7 +104,7 @@ Player.prototype.pointerdown = function (event) {
     this.pointerStartY = event.y;
 
     this.lineStart = {x: this.x, y: this.y};
-    this.lineEnd = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
+    this.lineEnd = {x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
 
     this.drawPointer = true;
   }
@@ -105,7 +117,12 @@ Player.prototype.pointerup = function (event) {
     var dist = Math.sqrt(diffX*diffX + diffY*diffY);
 
     if (dist > 0) {
-      this.addForce(diffX/dist * this.force, diffY/dist * this.force);
+      if (this.colorIndex === 1) {
+        this.addForce(diffX/dist * this.bonusForce, diffY/dist * this.bonusForce);
+      }
+      else {
+        this.addForce(diffX/dist * this.force, diffY/dist * this.force);
+      }
     }
 
     this.drawPointer = false;

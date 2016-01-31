@@ -38,7 +38,7 @@ Menu = {
 
   pointerup: function(event) {
     if (this.restartButton.clicked(event)) {
-      app.setState(Game);
+      app.setState(newGame());
     }
   }
 
