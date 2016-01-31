@@ -23,6 +23,7 @@ function newGame() {
         this.rightSideBlocks.step(dt);
 
         // HACK: there are probably better ways of building up the level
+        // TODO: Blocks are never removed.  They will exist forever and ever.
         // Add some randomm blocks in once player reaches certain heights
         if (this.player.y - app.height < this.lastBlockAddedY) {
           if (Math.random() > 0.5) {
@@ -78,6 +79,11 @@ function newGame() {
         layer.restore();
 
         /* Draw things that aren't affected by camera movement here (GUI) */
+
+        layer
+          .fillStyle("#fff")
+          .font("40pt Calibri")
+          .fillText(((-this.cameraY + this.app.center.y/2) | 0), this.margin, this.margin);
 
       }
       else {

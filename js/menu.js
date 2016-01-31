@@ -50,7 +50,6 @@ var Button = function() {
   this.x = this.width/2;
   this.y = Menu.app.height/2 - this.height/2;
 
-
   this.font = "40pt Calibri";
 };
 
