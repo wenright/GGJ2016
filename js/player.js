@@ -54,7 +54,8 @@ Player.prototype.step = function (dt) {
     }
 
     // Fall through bottom of the frame then lose
-    else if (this.y > Game.app.center.y) {
+    else if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
+      console.log('Game over!');
       Game.lost = true;
     }
   }
@@ -86,14 +87,14 @@ Player.prototype.pointerup = function (event) {
   }
 };
 
+Player.prototype.pointermove = function(event) {
+  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
+  this.pointerCurr = { x: event.x, y: event.y};
+};
+
 Player.prototype.addForce = function (dx, dy) {
   this.vx += dx * this.force;
   this.vy += dy * this.force;
 
   this.stuck = false;
-};
-
-Player.pointermove = function(event) {
-  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
-  this.pointerCurr = { x: event.x, y: event.y};
 };
