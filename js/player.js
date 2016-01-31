@@ -4,10 +4,6 @@ var Player = function () {
   this.x = Game.app.center.x;
   this.y = Game.app.center.y / 2;
 
-  this.pointerStart = { x: 0, y: 0 };
-  this.pointerCurr = { x: 0, y: 0 };
-  this.drawPointer = false;
-
   this.vx = 0;
   this.vy = 0;
 
@@ -15,6 +11,12 @@ var Player = function () {
   this.force = 1000;
 
   this.stuck = true;
+
+  this.lineStart = { x: 0, y: 0 };
+  this.lineEnd = { x: 0, y: 0 };
+  this.drawPointer = false;
+
+  this.color = '#ff7700';
 };
 
 Player.prototype.step = function (dt) {
@@ -51,6 +53,13 @@ Player.prototype.step = function (dt) {
     if (other) {
       this.vx = 0;
       this.vy = 0;
+
+      // Tween the color only once
+      if (!this.stuck) {
+        Game.app.tween(this)
+          .to({color: other.color}, 0.25, "outQuad");
+      }
+
       this.stuck = true;
     }
 
@@ -64,39 +73,49 @@ Player.prototype.step = function (dt) {
 
 Player.prototype.render = function () {
   Game.app.layer
-    .fillStyle('#ff7700')
+    .fillStyle(this.color)
     .fillCircle(this.x, this.y, this.radius);
 
+  // Draw the line representing where the ball will launch to
   if (this.drawPointer) {
     Game.app.layer
       .strokeStyle("#0af")
       .lineWidth(4)
-      .strokeLine(this.pointerStart, this.pointerCurr);
+      .strokeLine(this.lineStart, this.lineEnd);
   }
 };
 
 Player.prototype.pointerdown = function (event) {
-  this.pointerStartX = event.x;
-  this.pointerStartY = event.y;
+  if (this.stuck) {
+    this.pointerStartX = event.x;
+    this.pointerStartY = event.y;
 
-  this.drawPointer = true;
+    this.lineStart = {x: this.x, y: this.y};
+    this.lineEnd = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
+
+    this.drawPointer = true;
+  }
 };
 
 Player.prototype.pointerup = function (event) {
-  var diffX = this.pointerStartX - event.x;
-  var diffY = this.pointerStartY - event.y;
-  var dist = Math.sqrt(diffX*diffX + diffY*diffY);
+  if (this.stuck) {
+    var diffX = this.pointerStartX - event.x;
+    var diffY = this.pointerStartY - event.y;
+    var dist = Math.sqrt(diffX*diffX + diffY*diffY);
 
-  if (dist > 0) {
-    this.addForce(diffX/dist, diffY/dist);
+    if (dist > 0) {
+      this.addForce(diffX/dist, diffY/dist);
+    }
+
+    this.drawPointer = false;
   }
-
-  this.drawPointer = false;
 };
 
 Player.prototype.pointermove = function(event) {
-  this.pointerStart = { x: this.x, y: this.y};
-  this.pointerCurr = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
+  if (this.stuck) {
+    this.lineStart = { x: this.x, y: this.y};
+    this.lineEnd = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
+  }
 };
 
 Player.prototype.addForce = function (dx, dy) {
