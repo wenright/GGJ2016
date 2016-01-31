@@ -56,8 +56,9 @@ Player.prototype.step = function (dt) {
 
     // Fall through bottom of the frame then lose
     else if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
-      console.log('Game over!');
-      Game.lost = true;
+      console.log('You lost!');
+
+      app.setState(Menu);
     }
   }
 };
