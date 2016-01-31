@@ -26,29 +26,37 @@ Player.prototype.step = function (dt) {
     // Apply gravity by adding it to the y velocity
     this.vy += this.gravity * dt;
 
+    var thisY = this.y;
+    var other;
+
     // Perform collision detection, and bounce if there is a collision
     if (this.x < this.radius + Game.margin) {
       this.x = this.radius + Game.margin;
       this.vx = -this.vx;
 
-      var thisY = this.y;
-
-      var other = Game.leftSideBlocks.get(function(e) {
+      other = Game.leftSideBlocks.get(function(e) {
         return e.y + e.h >= thisY && e.y <= thisY;
       });
-
-      if (other) {
-        this.vx = 0;
-        this.vy = 0;
-        this.stuck = true;
-      }
     }
     else if (this.x > Game.app.width - this.radius - Game.margin) {
       this.x = Game.app.width - this.radius - Game.margin;
       this.vx = -this.vx;
+
+      other = Game.rightSideBlocks.get(function(e) {
+        return e.y + e.h >= thisY && e.y <= thisY;
+      });
     }
+
+    // If there is a block hit, stick to it and gain its powers
+    if (other) {
+      this.vx = 0;
+      this.vy = 0;
+      this.stuck = true;
+    }
+
     // Fall through bottom of the frame then lose
-    else if (this.y > Game.app.center.y) {
+    else if (this.y > Game.cameraY + Game.app.center.y + this.radius) {
+      console.log('Game over!');
       Game.lost = true;
     }
   }
@@ -89,6 +97,11 @@ Player.prototype.pointerup = function (event) {
 Player.prototype.pointermove = function(event) {
   this.pointerStart = { x: this.x, y: this.y};
   this.pointerCurr = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
+};
+
+Player.prototype.pointermove = function(event) {
+  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
+  this.pointerCurr = { x: event.x, y: event.y};
 };
 
 Player.prototype.addForce = function (dx, dy) {

@@ -10,11 +10,15 @@ Game = {
 
     this.leftSideBlocks = new EntitySystem();
     this.leftSideBlocks.add(new Block(0, 0, '#25f000'));
+    this.rightSideBlocks = new EntitySystem();
+    this.rightSideBlocks.add(new Block(app.width - this.margin, -400, '#51a8db'));
   },
 
   step: function(dt) {
     this.player.step(dt);
+
     this.leftSideBlocks.step(dt);
+    this.rightSideBlocks.step(dt);
   },
 
   render: function() {
@@ -46,13 +50,25 @@ Game = {
       /* Draw the player */
       this.player.render();
 
-      /* Draw all of the leftSideBlocks */
+      /* Draw all of the blocks on the left and right sides */
       this.leftSideBlocks.render();
+      this.rightSideBlocks.render();
 
       /* restore drawing pointer to its previous state */
       layer.restore();
 
       /* Draw things that aren't affected by camera movement here (GUI) */
+
+    }
+    else {
+      /* clear screen */
+      layer.clear("#222");
+
+      /* Draw game over text */
+      layer
+        .fillStyle("#fff")
+        .textAlign("center")
+        .fillText("Game Over!", app.center.x, app.center.y);
     }
   },
 
