@@ -4,6 +4,9 @@ var Player = function () {
   this.x = Game.app.center.x;
   this.y = Game.app.center.y / 2;
 
+  this.pointerStart = { x: 0, y: 0 };
+  this.pointerCurr = { x: 0, y: 0 };
+
   this.vx = 0;
   this.vy = 0;
 
@@ -48,6 +51,11 @@ Player.prototype.render = function () {
   Game.app.layer
     .fillStyle('#ff7700')
     .fillCircle(this.x, this.y, this.radius);
+
+  Game.app.layer
+    .strokeStyle("#0af")
+    .lineWidth(4)
+    .strokeLine(this.pointerStart, this.pointerCurr);
 };
 
 Player.prototype.addForce = function (dx, dy) {
@@ -55,4 +63,9 @@ Player.prototype.addForce = function (dx, dy) {
   this.vy += dy * this.force;
 
   this.stuck = false;
+};
+
+Player.pointermove = function(event) {
+  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
+  this.pointerCurr = { x: event.x, y: event.y};
 };

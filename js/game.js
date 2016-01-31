@@ -54,7 +54,7 @@ Game = {
   },
 
   pointermove: function(event) {
-
+    Game.player.pointermove(event);
   },
 
   pointerdown: function(event) {
