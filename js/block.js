@@ -11,7 +11,8 @@ var Block = function (x, y) {
   this.w = Game.margin;
   this.h = 200;
 
-  this.color = blockColors[(Math.random() * 3) | 0];
+  this.colorIndex = (Math.random() * 3) | 0;
+  this.color = blockColors[this.colorIndex];
 };
 
 Block.prototype.render = function () {

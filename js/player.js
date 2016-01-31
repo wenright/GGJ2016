@@ -16,7 +16,7 @@ var Player = function () {
   this.lineEnd = { x: 0, y: 0 };
   this.drawPointer = false;
 
-  this.color = '#ff7700';
+  this.color = '#fff';
 };
 
 Player.prototype.step = function (dt) {
@@ -104,7 +104,7 @@ Player.prototype.pointerup = function (event) {
     var dist = Math.sqrt(diffX*diffX + diffY*diffY);
 
     if (dist > 0) {
-      this.addForce(diffX/dist, diffY/dist);
+      this.addForce(diffX/dist * this.force, diffY/dist * this.force);
     }
 
     this.drawPointer = false;
@@ -119,8 +119,8 @@ Player.prototype.pointermove = function(event) {
 };
 
 Player.prototype.addForce = function (dx, dy) {
-  this.vx += dx * this.force;
-  this.vy += dy * this.force;
+  this.vx += dx;
+  this.vy += dy;
 
   this.stuck = false;
 };

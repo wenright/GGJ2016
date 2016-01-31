@@ -25,7 +25,6 @@ Game = {
       // HACK: there are probably better ways of building up the level
       // Add some randomm blocks in once player reaches certain heights
       if (this.player.y - app.height < this.lastBlockAddedY) {
-        console.log('ADding new block');
         if (Math.random() > 0.5) {
           this.rightSideBlocks.add(new Block(app.width - this.margin, this.lastBlockAddedY));
           this.lastBlockAddedY -= 300 + Math.random() * 200;
@@ -51,13 +50,13 @@ Game = {
 
     if (!this.lost) {
       /* clear screen */
-      layer.clear("#222");
+      layer.clear("#434D53");
 
       /* Draw a black bar down both sides of the screen */
-      layer.fillStyle('#000')
+      layer.fillStyle('#222')
         .fillRect(0, 0, this.margin, app.height);
 
-      layer.fillStyle('#000')
+      layer.fillStyle('#222')
         .fillRect(app.width - this.margin, 0, 40, app.height);
 
       /* save all setting of drawing pointer */
