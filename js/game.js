@@ -29,6 +29,23 @@ Game = {
 
     /* restore drawing pointer to its previous state */
     layer.restore();
+  },
+
+  pointermove: function(event) {
+
+  },
+
+  pointerdown: function(event) {
+    Game.pointerStartX = event.x;
+    Game.pointerStartY = event.y;
+  },
+
+  pointerup: function(event) {
+    var diffX = Game.pointerStartX - event.x;
+    var diffY = Game.pointerStartY - event.y;
+    var dist = Math.sqrt(diffX*diffX + diffY*diffY);
+
+    Game.player.addForce(diffX/dist, diffY/dist);
   }
 
 };
