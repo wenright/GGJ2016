@@ -1,11 +1,17 @@
-var Block = function (x, y, color) {
+var blockColors = [
+  '#CC0C39',
+  '#C8CF02',
+  '#1693A7'
+];
+
+var Block = function (x, y) {
   this.x = x;
   this.y = y;
 
   this.w = Game.margin;
   this.h = 200;
 
-  this.color = color;
+  this.color = blockColors[(Math.random() * 3) | 0];
 };
 
 Block.prototype.render = function () {
