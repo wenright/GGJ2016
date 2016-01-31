@@ -6,6 +6,7 @@ var Player = function () {
 
   this.pointerStart = { x: 0, y: 0 };
   this.pointerCurr = { x: 0, y: 0 };
+  this.drawPointer = false;
 
   this.vx = 0;
   this.vy = 0;
@@ -58,15 +59,19 @@ Player.prototype.render = function () {
     .fillStyle('#ff7700')
     .fillCircle(this.x, this.y, this.radius);
 
-  Game.app.layer
-    .strokeStyle("#0af")
-    .lineWidth(4)
-    .strokeLine(this.pointerStart, this.pointerCurr);
+  if (this.drawPointer) {
+    Game.app.layer
+      .strokeStyle("#0af")
+      .lineWidth(4)
+      .strokeLine(this.pointerStart, this.pointerCurr);
+  }
 };
 
 Player.prototype.pointerdown = function (event) {
   this.pointerStartX = event.x;
   this.pointerStartY = event.y;
+
+  this.drawPointer = true;
 };
 
 Player.prototype.pointerup = function (event) {
@@ -77,6 +82,13 @@ Player.prototype.pointerup = function (event) {
   if (dist > 0) {
     this.addForce(diffX/dist, diffY/dist);
   }
+
+  this.drawPointer = false;
+};
+
+Player.prototype.pointermove = function(event) {
+  this.pointerStart = { x: this.x, y: this.y};
+  this.pointerCurr = { x: this.x + (this.pointerStartX - event.x), y: this.y + (this.pointerStartY - event.y)};
 };
 
 Player.prototype.addForce = function (dx, dy) {
@@ -84,9 +96,4 @@ Player.prototype.addForce = function (dx, dy) {
   this.vy += dy * this.force;
 
   this.stuck = false;
-};
-
-Player.pointermove = function(event) {
-  this.pointerStart = { x: Game.pointerStartX, y: Game.pointerStartY};
-  this.pointerCurr = { x: event.x, y: event.y};
 };
